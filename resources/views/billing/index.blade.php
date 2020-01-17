@@ -14,7 +14,7 @@
                         @foreach($plans as $plan)
                         <div class="col-md-4 text-center">
                             <h3>{{ $plan->name }}</h3>
-                            <b>{{ number_format($plan->price / 100, 2) }} / month</b>
+                            <b>${{ number_format($plan->price / 100, 2) }} / month</b>
                             <hr />
                             <a href="{{ route('checkout', $plan->id) }}" class="btn btn-primary">Subscribe to {{ $plan->name }}</a>
                         </div>
