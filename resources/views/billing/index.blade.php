@@ -8,6 +8,9 @@
                 <div class="card-header">Billing</div>
 
                 <div class="card-body">
+                    @if (session('message'))
+                        <div class="alert alert-info">{{ session('message') }}</div>
+                    @endif
                     You are now on Free Plan. Please choose plan to upgrade:
                     <br /><br />
                     <div class="row">

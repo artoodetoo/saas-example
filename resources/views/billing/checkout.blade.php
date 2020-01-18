@@ -10,10 +10,13 @@
                     <div class="card-body">
                         <div class="row">
                             <div class="col-md-6">
+                                @if($errors->any())
+                                    <div class="alert alert-danger">{{ var_export($errors->first()) }}</div>
+                                @endif
                                 <form action="{{ route('checkout.process') }}" method="POST" id="checkout-form">
                                     @csrf
                                     <input type="hidden" name="billing_plan_id" value="{{ $plan->id }}" />
-                                    <input type="hidden" name="payment-method" id="payment-method" value="" />
+                                    <input type="hidden" name="payment_method" id="payment_method" value="" />
 
                                     <input id="card-holder-name" type="text" placeholder="Card holder name">
 
@@ -80,7 +83,7 @@
               alert('error')
             } else {
               paymentMethod = result.setupIntent.payment_method
-              $('#payment-method').val(paymentMethod)
+              $('#payment_method').val(paymentMethod)
               $('#checkout-form').submit()
             }
           })
