@@ -11,13 +11,13 @@ class CheckoutController extends Controller
     {
         $plan = Plan::findOrFail($plan_id);
 
-        $currentPlan = auth()->user()->subscription('default')->stripe_plan ?? null;
+        $currentPlan = $this->user()->subscription('default')->stripe_plan ?? null;
         if (!is_null($currentPlan) && $currentPlan != $plan->stripe_plan_id) {
-            auth()->user()->subscription('default')->swap($plan->stripe_plan_id);
+            $this->user()->subscription('default')->swap($plan->stripe_plan_id);
             redirect()->route('billing');
         }
 
-        $intent = auth()->user()->createSetupIntent();
+        $intent = $this->user()->createSetupIntent();
 
         return view('billing.checkout', compact('plan', 'intent'));
     }
@@ -26,7 +26,7 @@ class CheckoutController extends Controller
     {
         $plan = Plan::findOrFail($request->billing_plan_id);
         try {
-            auth()->user()
+            $this->user()
                 ->newSubscription('default', $plan->stripe_plan_id)
                 ->create($request->payment_method);
             return redirect()->route('billing')->withMessage('Subscribed successfully!');

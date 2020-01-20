@@ -9,19 +9,21 @@ class BillingController extends Controller
     public function index()
     {
         $plans = Plan::all();
-        $currentPlan = auth()->user()->subscription('default') ?? null;
-        return view('billing.index', compact('plans', 'currentPlan'));
+        $currentPlan = $this->user()->subscription('default') ?? null;
+        $paymentMethods = $this->user()->paymentMethods();
+        $defaultPaymentMethod = $this->user()->defaultPaymentMethod();
+        return view('billing.index', compact('plans', 'currentPlan', 'paymentMethods', 'defaultPaymentMethod'));
     }
 
     public function cancel()
     {
-        auth()->user()->subscription('default')->cancel();
+        $this->user()->subscription('default')->cancel();
         return redirect()->route('billing');
     }
 
     public function resume()
     {
-        auth()->user()->subscription('default')->resume();
+        $this->user()->subscription('default')->resume();
         return redirect()->route('billing');
     }
 }
