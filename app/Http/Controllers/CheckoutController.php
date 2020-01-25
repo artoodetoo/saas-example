@@ -28,6 +28,7 @@ class CheckoutController extends Controller
         try {
             $this->user()
                 ->newSubscription('default', $plan->stripe_plan_id)
+                ->trialDays(10)
                 ->create($request->payment_method);
             return redirect()->route('billing')->withMessage('Subscribed successfully!');
         } catch (\Exception $e) {
