@@ -42,4 +42,16 @@ class User extends Authenticatable
     ];
 
     protected $dates = ['trial_ends_at'];
+
+    /**
+     * Get the notification routing information for the slack driver.
+     *
+     * @param  \Illuminate\Notifications\Notification|null  $notification
+     * @return mixed
+     */
+    public function routeNotificationForSlack($notification = null)
+    {
+        return config('logging.channels.slack.url');
+    }
+
 }

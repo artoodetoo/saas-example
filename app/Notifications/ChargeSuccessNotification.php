@@ -58,13 +58,12 @@ class ChargeSuccessNotification extends Notification
     {
         return (new SlackMessage)
             ->from('Ghost', ':ghost:')
-            ->to('#flare')
             ->content('Someone have been charged')
             ->attachment(function ($attachment) {
-                $username = $this->payment->user->username ?? 'unknown';
+                $username = $this->payment->user->name ?? 'unknown';
                 $attachment->title('Payment Successful')
                     ->fields([
-                        'ID' => $this->payment->stripe_id,
+                        'StripeID' => $this->payment->stripe_id,
                         'User' => $username,
                         'Amount' => '$' . number_format($this->payment->total / 100, 2),
                     ]);
