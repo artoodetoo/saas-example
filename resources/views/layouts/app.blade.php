@@ -1,9 +1,3 @@
-@php
-/**
- * @var App\Plan[] $plans
- * @var App\User $user
- */
-@endphp
 <!doctype html>
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
 <head>
@@ -41,7 +35,6 @@
                 <div class="collapse navbar-collapse" id="navbarSupportedContent">
                     <!-- Left Side Of Navbar -->
                     <ul class="navbar-nav mr-auto">
-
                     </ul>
 
                     <!-- Right Side Of Navbar -->
@@ -57,9 +50,18 @@
                                 </li>
                             @endif
                         @else
+                            @can('tasks')
+                                <li class="nav-item">
+                                    <a class="nav-link" href="{{ route('tasks.index') }}">My Tasks</a>
+                                </li>
+                            @else
+                                <li class="nav-item">
+                                    <a class="nav-link" href="{{ route('billing') }}">My Tasks</a>
+                                </li>
+                            @endcan
                             <li class="nav-item dropdown">
                                 <a id="navbarDropdown" class="nav-link dropdown-toggle" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
-                                    {{ Auth::user()->name }} <span class="caret"></span>
+                                    {{ $user->name }} <span class="caret"></span>
                                 </a>
 
                                 <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
@@ -84,11 +86,9 @@
         </nav>
 
         <main class="py-4">
-            @if ($user->trial_ends_at)
-                <div class="alert alert-info text-center">
-                    You have {{ now()->diffInDays($user->trial_ends_at) }} days of free trial left.
-                    <a href="{{ route('billing') }}">Choose your plan</a> at any time.
-                </div>
+            @if ($user && $user->trial_ends_at)
+                <div class="alert alert-info text-center">You have {{ now()->diffInDays($user->trial_ends_at) }} days of free trial left.
+                    <a href="{{ route('billing') }}">Choose your plan</a> at any time.</div>
             @endif
             @yield('content')
         </main>
