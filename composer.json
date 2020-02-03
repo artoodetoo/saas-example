@@ -1,7 +1,7 @@
 {
-    "name": "laravel/laravel",
+    "name": "artoodetoo/saas-example",
     "type": "project",
-    "description": "The Laravel Framework.",
+    "description": "The SaaS Example Project",
     "keywords": [
         "framework",
         "laravel"
