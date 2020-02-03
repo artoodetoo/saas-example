@@ -5,6 +5,7 @@ namespace App\Notifications;
 use App\Payment;
 use Illuminate\Bus\Queueable;
 use Illuminate\Notifications\Messages\MailMessage;
+use Illuminate\Notifications\Messages\SlackMessage;
 use Illuminate\Notifications\Notification;
 
 class ChargeSuccessNotification extends Notification
@@ -31,7 +32,7 @@ class ChargeSuccessNotification extends Notification
      */
     public function via($notifiable)
     {
-        return ['mail'];
+        return ['mail', 'slack'];
     }
 
     /**
@@ -45,6 +46,29 @@ class ChargeSuccessNotification extends Notification
         return (new MailMessage)
             ->line('You have been charged $' . number_format($this->payment->total / 100, 2))
             ->line('Thank you for using our application!');
+    }
+
+    /**
+     * Get the mail representation of the notification.
+     *
+     * @param mixed $notifiable
+     * @return \Illuminate\Notifications\Messages\SlackMessage
+     */
+    public function toSlack($notifiable)
+    {
+        return (new SlackMessage)
+            ->from('Ghost', ':ghost:')
+            ->to('#flare')
+            ->content('Someone have been charged')
+            ->attachment(function ($attachment) {
+                $username = $this->payment->user->username ?? 'unknown';
+                $attachment->title('Payment Successful')
+                    ->fields([
+                        'ID' => $this->payment->stripe_id,
+                        'User' => $username,
+                        'Amount' => '$' . number_format($this->payment->total / 100, 2),
+                    ]);
+            });
     }
 
     /**

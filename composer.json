@@ -12,6 +12,7 @@
         "fideloper/proxy": "^4.0",
         "laravel/cashier": "^10.5",
         "laravel/framework": "^6.2",
+        "laravel/slack-notification-channel": "^2.0",
         "laravel/tinker": "^2.0",
         "spatie/laravel-stripe-webhooks": "^2.2"
     },
