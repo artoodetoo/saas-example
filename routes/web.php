@@ -18,3 +18,5 @@ Route::group(['middleware' => 'auth'], function () {
     Route::get('payment-methods/default/{id}', 'PaymentMethodController@markDefault')->name('payment-methods.markDefault');
     Route::resource('payment-methods', 'PaymentMethodController');
 });
+
+Route::stripeWebhooks('stripe-webhook');
