@@ -37,9 +37,10 @@ class ChargeSucceededJob implements ShouldQueue
         if ($user) {
             Payment::create([
                 'user_id' => $user->id,
+                'stripe_id' => $charge['id'],
                 'subtotal' => $charge['amount'],
 //            'tax' => ?,
-                'subtotal' => $charge['amount'],
+                'total' => $charge['amount'],
             ]);
         }
     }
