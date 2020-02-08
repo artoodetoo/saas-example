@@ -44,8 +44,13 @@ class ChargeSuccessNotification extends Notification
     public function toMail($notifiable)
     {
         return (new MailMessage)
-            ->line('You have been charged $' . number_format($this->payment->total / 100, 2))
+            ->line('You have been charged $' . cents($this->payment->total))
             ->line('Thank you for using our application!');
+
+        $filename = storage_path('app/invoices/' . $this->payment->id . '.pdf');
+        if (file_exists($filename)) {
+            $message->attach($filename);
+        }
     }
 
     /**
@@ -65,7 +70,7 @@ class ChargeSuccessNotification extends Notification
                     ->fields([
                         'StripeID' => $this->payment->stripe_id,
                         'User' => $username,
-                        'Amount' => '$' . number_format($this->payment->total / 100, 2),
+                        'Amount' => '$' . cents($this->payment->total),
                     ]);
             });
     }

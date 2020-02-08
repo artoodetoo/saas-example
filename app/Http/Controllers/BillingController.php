@@ -3,11 +3,16 @@
 namespace App\Http\Controllers;
 
 use App\Plan;
+use App\Services\InvoicesService;
+use App\Payment;
 
 class BillingController extends Controller
 {
     public function index()
     {
+        $payment = Payment::with('user')->find(5);
+        return (new InvoicesService())->generateInvoice($payment);
+
         $plans = Plan::all();
         $currentPlan = $this->user()->subscription('default') ?? null;
 

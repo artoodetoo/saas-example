@@ -35,7 +35,7 @@
                         @foreach($plans as $plan)
                         <div class="col-md-4 text-center">
                             <h3>{{ $plan->name }}</h3>
-                            <b>${{ number_format($plan->price / 100, 2) }} / month</b>
+                            <b>${{ cents($plan->price) }} / month</b>
                             <hr />
                             @if (!is_null($currentPlan) && $plan->stripe_plan_id == $currentPlan->stripe_plan)
                                 Your current plan
