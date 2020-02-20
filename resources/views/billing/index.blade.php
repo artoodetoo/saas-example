@@ -5,6 +5,7 @@
  * @var Laravel\Cashier\Subscription $currentPlan
  * @var Laravel\Cashier\PaymentMethod[] $paymentMethods
  * @var Laravel\Cashier\PaymentMethod $defaultPaymentMethod
+ * @var App\Payment[] $payments
  */
 @endphp
 
@@ -57,7 +58,7 @@
             </div>
 
             @if (!is_null($currentPlan))
-                <br />
+            <br />
             <div class="card">
                 <div class="card-header">Payment Methods</div>
 
@@ -90,6 +91,34 @@
                 </div>
             </div>
             @endif
+
+            <br />
+            <div class="card">
+                <div class="card-header">Payment History</div>
+
+                <div class="card-body">
+                    <table class="table">
+                        <thead>
+                        <tr>
+                            <th>Payment Date</th>
+                            <th>Amount</th>
+                            <th></th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        @foreach ($payments as $payment)
+                        <tr>
+                            <td>{{ $payment->created_at }}</td>
+                            <td>{{ '$' . cents($payment->total) }}</td>
+                            <td>
+                                <a href="{{ route('invoices.download', $payment->id) }}" class="btn btn-sm btn-primary">Download Invoice</a>
+                            </td>
+                        </tr>
+                        @endforeach
+                        </tbody>
+                    </table>
+                </div>
+            </div>
 
         </div>
     </div>

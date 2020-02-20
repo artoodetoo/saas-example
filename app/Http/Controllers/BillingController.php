@@ -10,9 +10,6 @@ class BillingController extends Controller
 {
     public function index()
     {
-        $payment = Payment::with('user')->find(5);
-        return (new InvoicesService())->generateInvoice($payment);
-
         $plans = Plan::all();
         $currentPlan = $this->user()->subscription('default') ?? null;
 
@@ -23,7 +20,9 @@ class BillingController extends Controller
             $defaultPaymentMethod = $this->user()->defaultPaymentMethod();
         }
 
-        return view('billing.index', compact('plans', 'currentPlan', 'paymentMethods', 'defaultPaymentMethod'));
+        $payments = Payment::where('user_id', $this->user()->id)->latest()->get();
+
+        return view('billing.index', compact('plans', 'currentPlan', 'paymentMethods', 'defaultPaymentMethod', 'payments'));
     }
 
     public function cancel()
@@ -36,5 +35,15 @@ class BillingController extends Controller
     {
         $this->user()->subscription('default')->resume();
         return redirect()->route('billing');
+    }
+
+    public function downloadInvoice($paymentId)
+    {
+        $payment = Payment::where('user_id', $this->user()->id)->where('id', $paymentId)->firstOrFail();
+        $filename = storage_path('app/invoices/' . $payment->id .'.pdf');
+        if (!file_exists($filename)) {
+            abort(404);
+        }
+        return response()->download($filename);
     }
 }
